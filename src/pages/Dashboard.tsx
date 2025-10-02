@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Zap, Trash2, Coins, TreePine, Upload, History, TrendingUp, Award } from "lucide-react";
+import { Zap, Trash2, Coins, TreePine, Upload, History, TrendingUp, Award, Recycle } from "lucide-react";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { TokenMonitor } from "@/components/TokenMonitor";
 
 const Dashboard = () => {
   const stats = {
@@ -9,11 +11,22 @@ const Dashboard = () => {
     energyConsumed: 98.2,
     energySaved: 47.6,
     wasteDisposed: 24.5,
+    recyclingAmount: 38.7,
     ecoCredits: 340,
     greenTokens: 1250,
     carbonSaved: 78.4,
     sustainabilityScore: 87
   };
+
+  const wasteMarketPrices = [
+    { type: "Plastic", price: 0.25, unit: "kg", icon: "♻️" },
+    { type: "Metal Scrap", price: 1.50, unit: "kg", icon: "🔩" },
+    { type: "Copper", price: 8.75, unit: "kg", icon: "🔶" },
+    { type: "Glass", price: 0.15, unit: "kg", icon: "🍾" },
+    { type: "Paper", price: 0.10, unit: "kg", icon: "📄" },
+    { type: "Cardboard", price: 0.20, unit: "kg", icon: "📦" },
+    { type: "Wood", price: 0.30, unit: "kg", icon: "🪵" }
+  ];
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
@@ -23,12 +36,20 @@ const Dashboard = () => {
           <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
             Dashboard
           </h1>
-          <Button variant="ghost" size="icon">
-            <Award className="h-5 w-5" />
-          </Button>
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <Button variant="ghost" size="icon">
+              <Award className="h-5 w-5" />
+            </Button>
+          </div>
         </div>
         <p className="text-muted-foreground">Track your sustainability impact</p>
       </header>
+
+      {/* Token Monitor */}
+      <div className="mb-6">
+        <TokenMonitor />
+      </div>
 
       {/* Energy Stats */}
       <div className="mb-6">
@@ -64,15 +85,55 @@ const Dashboard = () => {
 
           <Card className="bg-gradient-to-br from-primary/10 to-accent/10">
             <CardHeader className="pb-3">
-              <CardDescription>Saved</CardDescription>
-              <CardTitle className="text-3xl text-primary">{stats.energySaved} kWh</CardTitle>
+              <CardDescription>Surplus Listed</CardDescription>
+              <CardTitle className="text-3xl text-primary">{stats.energySaved} kWh/day</CardTitle>
             </CardHeader>
             <CardContent>
               <Link to="/energy">
                 <Button variant="eco" size="sm" className="w-full">
-                  Tokenize Surplus
+                  Energy Marketplace
                 </Button>
               </Link>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+
+      {/* Recycling Stats */}
+      <div className="mb-6">
+        <h2 className="text-lg font-semibold mb-3 flex items-center gap-2">
+          <Recycle className="h-5 w-5 text-[hsl(var(--eco-green))]" />
+          Your Recycling
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+          <Card className="bg-gradient-to-br from-card to-[hsl(var(--eco-light))]">
+            <CardHeader className="pb-3">
+              <CardDescription>Total Recycled</CardDescription>
+              <CardTitle className="text-3xl">{stats.recyclingAmount} kg</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center text-sm text-[hsl(var(--eco-green))]">
+                <TrendingUp className="h-4 w-4 mr-1" />
+                +18% this month
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="col-span-1 md:col-span-2">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg">Waste Market Prices</CardTitle>
+              <CardDescription>Current selling rates</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                {wasteMarketPrices.map((item) => (
+                  <div key={item.type} className="p-2 bg-muted rounded-lg text-center">
+                    <div className="text-2xl mb-1">{item.icon}</div>
+                    <p className="text-xs font-medium mb-1">{item.type}</p>
+                    <p className="text-sm font-bold text-primary">${item.price}/{item.unit}</p>
+                  </div>
+                ))}
+              </div>
             </CardContent>
           </Card>
         </div>

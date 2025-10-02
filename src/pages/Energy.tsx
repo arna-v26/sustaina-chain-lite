@@ -2,18 +2,18 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Zap, TrendingUp, Battery } from "lucide-react";
-import { Progress } from "@/components/ui/progress";
+import { Input } from "@/components/ui/input";
+import { ArrowLeft, Zap, TrendingUp, Users, Plus } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 const Energy = () => {
-  const [tokenizing, setTokenizing] = useState(false);
+  const [listingAmount, setListingAmount] = useState("");
+  const [askingPrice, setAskingPrice] = useState("");
 
   const energyData = {
     currentGeneration: 12.4,
     surplusEnergy: 47.6,
-    tokenizableAmount: 47.6,
-    tokenRate: 10, // 1 token per 10 kWh
-    estimatedTokens: Math.floor(47.6 / 10),
+    myListing: { amount: 45.0, price: 120, bids: 3 },
     history: [
       { date: "Today", generated: 12.4, consumed: 8.2 },
       { date: "Yesterday", generated: 15.2, consumed: 10.1 },
@@ -22,12 +22,21 @@ const Energy = () => {
     ]
   };
 
-  const handleTokenize = () => {
-    setTokenizing(true);
-    setTimeout(() => {
-      setTokenizing(false);
-      alert(`Successfully tokenized ${energyData.tokenizableAmount} kWh into ${energyData.estimatedTokens} GreenTokens!`);
-    }, 2000);
+  const marketplaceListings = [
+    { seller: "User #A3F2", amount: 50, askingPrice: 125, bids: 5, status: "active" },
+    { seller: "User #B8K1", amount: 35, askingPrice: 90, bids: 2, status: "active" },
+    { seller: "User #C5M9", amount: 60, askingPrice: 150, bids: 8, status: "active" },
+    { seller: "User #D2P4", amount: 42, askingPrice: 110, bids: 1, status: "active" }
+  ];
+
+  const handleListEnergy = () => {
+    if (!listingAmount || !askingPrice) {
+      alert("Please fill in all fields");
+      return;
+    }
+    alert(`Successfully listed ${listingAmount} kWh/day for ${askingPrice} tokens!`);
+    setListingAmount("");
+    setAskingPrice("");
   };
 
   return (
@@ -41,9 +50,9 @@ const Energy = () => {
           </Button>
         </Link>
         <h1 className="text-3xl font-bold bg-gradient-to-r from-[hsl(var(--energy-yellow))] to-primary bg-clip-text text-transparent mb-2">
-          Energy Tokenization
+          Energy Marketplace
         </h1>
-        <p className="text-muted-foreground">Convert your surplus energy into GreenTokens</p>
+        <p className="text-muted-foreground">List your surplus energy or bid on listings</p>
       </header>
 
       {/* Current Generation */}
@@ -66,83 +75,103 @@ const Energy = () => {
         </CardContent>
       </Card>
 
-      {/* Tokenization Panel */}
+      {/* My Active Listing */}
+      {energyData.myListing && (
+        <Card className="mb-6 border-primary/50">
+          <CardHeader>
+            <CardTitle className="flex items-center justify-between">
+              My Active Listing
+              <Badge variant="outline" className="text-[hsl(var(--eco-green))]">Active</Badge>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-3 gap-4">
+              <div>
+                <p className="text-sm text-muted-foreground mb-1">Amount</p>
+                <p className="text-xl font-bold">{energyData.myListing.amount} kWh/day</p>
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground mb-1">Asking Price</p>
+                <p className="text-xl font-bold text-primary">{energyData.myListing.price} GRN</p>
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground mb-1">Active Bids</p>
+                <p className="text-xl font-bold flex items-center gap-1">
+                  <Users className="h-5 w-5" />
+                  {energyData.myListing.bids}
+                </p>
+              </div>
+            </div>
+            <Button variant="outline" size="sm" className="mt-4">
+              View Bids
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* List New Energy */}
       <Card className="mb-6">
         <CardHeader>
-          <CardTitle>Surplus Energy Available</CardTitle>
-          <CardDescription>Energy ready to be tokenized</CardDescription>
+          <CardTitle className="flex items-center gap-2">
+            <Plus className="h-5 w-5" />
+            List Surplus Energy
+          </CardTitle>
+          <CardDescription>Available surplus: {energyData.surplusEnergy} kWh/day</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-4">
           <div>
-            <div className="flex justify-between mb-2">
-              <span className="text-sm font-medium">Surplus Energy</span>
-              <span className="text-sm font-bold text-primary">{energyData.surplusEnergy} kWh</span>
-            </div>
-            <Progress value={75} className="h-3" />
-            <p className="text-xs text-muted-foreground mt-1">75% of storage capacity</p>
+            <label className="text-sm font-medium mb-2 block">Amount (kWh/day)</label>
+            <Input 
+              type="number" 
+              placeholder="e.g., 45" 
+              value={listingAmount}
+              onChange={(e) => setListingAmount(e.target.value)}
+            />
           </div>
-
-          <div className="p-4 bg-gradient-to-r from-primary/10 to-accent/10 rounded-lg space-y-3">
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-muted-foreground">Tokenizable Amount</span>
-              <span className="text-xl font-bold">{energyData.tokenizableAmount} kWh</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-muted-foreground">Conversion Rate</span>
-              <span className="text-sm font-medium">1 token = {energyData.tokenRate} kWh</span>
-            </div>
-            <div className="h-px bg-border" />
-            <div className="flex justify-between items-center">
-              <span className="font-semibold">You'll receive</span>
-              <span className="text-2xl font-bold text-primary">{energyData.estimatedTokens} GreenTokens</span>
-            </div>
+          <div>
+            <label className="text-sm font-medium mb-2 block">Asking Price (GreenTokens)</label>
+            <Input 
+              type="number" 
+              placeholder="e.g., 120" 
+              value={askingPrice}
+              onChange={(e) => setAskingPrice(e.target.value)}
+            />
           </div>
-
           <Button 
             variant="energy" 
-            size="lg" 
             className="w-full"
-            onClick={handleTokenize}
-            disabled={tokenizing}
+            onClick={handleListEnergy}
           >
-            {tokenizing ? (
-              <>
-                <Battery className="mr-2 h-5 w-5 animate-pulse" />
-                Tokenizing...
-              </>
-            ) : (
-              <>
-                <Zap className="mr-2 h-5 w-5" />
-                Tokenize Now
-              </>
-            )}
+            <Zap className="mr-2 h-5 w-5" />
+            List Energy
           </Button>
         </CardContent>
       </Card>
 
-      {/* Energy History */}
+      {/* Marketplace Listings */}
       <Card>
         <CardHeader>
-          <CardTitle>Energy History</CardTitle>
-          <CardDescription>Your recent energy production and consumption</CardDescription>
+          <CardTitle>Marketplace Listings</CardTitle>
+          <CardDescription>Browse available energy listings</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
-            {energyData.history.map((entry, index) => (
-              <div key={index} className="flex items-center justify-between p-3 bg-muted rounded-lg">
-                <div>
-                  <p className="font-medium">{entry.date}</p>
+            {marketplaceListings.map((listing, index) => (
+              <div key={index} className="flex items-center justify-between p-4 bg-muted rounded-lg hover:bg-muted/80 transition-colors">
+                <div className="flex-1">
+                  <p className="font-medium mb-1">{listing.seller}</p>
                   <p className="text-sm text-muted-foreground">
-                    Surplus: {(entry.generated - entry.consumed).toFixed(1)} kWh
+                    {listing.amount} kWh/day • {listing.bids} bids
                   </p>
                 </div>
-                <div className="text-right">
-                  <p className="text-sm text-[hsl(var(--eco-green))]">
-                    +{entry.generated} kWh
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    -{entry.consumed} kWh
-                  </p>
+                <div className="flex items-center gap-3">
+                  <div className="text-right">
+                    <p className="text-sm text-muted-foreground">Price</p>
+                    <p className="text-lg font-bold text-primary">{listing.askingPrice} GRN</p>
+                  </div>
+                  <Button variant="eco" size="sm">
+                    Place Bid
+                  </Button>
                 </div>
               </div>
             ))}
