@@ -1,11 +1,24 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Zap, Trash2, Coins, TreePine, Upload, History, TrendingUp, Award, Recycle } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Zap, Trash2, Coins, TreePine, Upload, History, TrendingUp, Award, Recycle, LogOut, Wallet, DollarSign } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { TokenMonitor } from "@/components/TokenMonitor";
 
+const currencies = {
+  USD: { symbol: "$", rate: 1 },
+  EUR: { symbol: "€", rate: 0.92 },
+  GBP: { symbol: "£", rate: 0.79 },
+  INR: { symbol: "₹", rate: 83.12 },
+  JPY: { symbol: "¥", rate: 149.50 }
+};
+
 const Dashboard = () => {
+  const navigate = useNavigate();
+  const [wasteCurrency, setWasteCurrency] = useState<keyof typeof currencies>("USD");
+  
   const stats = {
     energyGenerated: 145.8,
     energyConsumed: 98.2,
@@ -18,32 +31,50 @@ const Dashboard = () => {
     sustainabilityScore: 87
   };
 
-  const wasteMarketPrices = [
-    { type: "Plastic", price: 0.25, unit: "kg", icon: "♻️" },
-    { type: "Metal Scrap", price: 1.50, unit: "kg", icon: "🔩" },
-    { type: "Copper", price: 8.75, unit: "kg", icon: "🔶" },
-    { type: "Glass", price: 0.15, unit: "kg", icon: "🍾" },
-    { type: "Paper", price: 0.10, unit: "kg", icon: "📄" },
-    { type: "Cardboard", price: 0.20, unit: "kg", icon: "📦" },
-    { type: "Wood", price: 0.30, unit: "kg", icon: "🪵" }
+  const wasteMarketPricesBase = [
+    { type: "Plastic", price: 0.50, unit: "kg", icon: "🔄", trend: "+5%" },
+    { type: "Metal Scrap", price: 2.30, unit: "kg", icon: "⚙️", trend: "+12%" },
+    { type: "Copper", price: 8.50, unit: "kg", icon: "🔶", trend: "+8%" },
+    { type: "Glass", price: 0.15, unit: "kg", icon: "🧊", trend: "-2%" },
+    { type: "Paper", price: 0.10, unit: "kg", icon: "📄", trend: "+3%" },
+    { type: "Cardboard", price: 0.20, unit: "kg", icon: "📦", trend: "+7%" },
+    { type: "Wood", price: 0.40, unit: "kg", icon: "🪵", trend: "+4%" },
   ];
+
+  const formatWastePrice = (price: number) => {
+    const converted = price * currencies[wasteCurrency].rate;
+    return `${currencies[wasteCurrency].symbol}${converted.toFixed(2)}`;
+  };
+
+  const handleLogout = () => {
+    navigate("/");
+  };
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
       {/* Header */}
       <header className="mb-6">
-        <div className="flex items-center justify-between mb-2">
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-            Dashboard
-          </h1>
+        <div className="flex items-center justify-between mb-2 flex-wrap gap-4">
+          <div>
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              Dashboard
+            </h1>
+            <p className="text-muted-foreground">Track your sustainability impact</p>
+          </div>
           <div className="flex items-center gap-2">
+            <Link to="/wallet">
+              <Button variant="outline" size="sm" className="gap-2 hover:scale-105 transition-transform">
+                <Wallet className="h-4 w-4" />
+                Wallet
+              </Button>
+            </Link>
             <ThemeToggle />
-            <Button variant="ghost" size="icon">
-              <Award className="h-5 w-5" />
+            <Button variant="outline" size="sm" onClick={handleLogout} className="gap-2 hover:scale-105 transition-transform">
+              <LogOut className="h-4 w-4" />
+              Logout
             </Button>
           </div>
         </div>
-        <p className="text-muted-foreground">Track your sustainability impact</p>
       </header>
 
       {/* Token Monitor */}
@@ -58,7 +89,7 @@ const Dashboard = () => {
           Your Energy
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Card className="bg-gradient-to-br from-card to-[hsl(var(--eco-light))]">
+          <Card className="bg-gradient-to-br from-card to-[hsl(var(--eco-light))] hover:shadow-lg transition-all hover:scale-[1.02] cursor-pointer">
             <CardHeader className="pb-3">
               <CardDescription>Generated</CardDescription>
               <CardTitle className="text-3xl">{stats.energyGenerated} kWh</CardTitle>
@@ -71,7 +102,7 @@ const Dashboard = () => {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="hover:shadow-lg transition-all hover:scale-[1.02] cursor-pointer">
             <CardHeader className="pb-3">
               <CardDescription>Consumed</CardDescription>
               <CardTitle className="text-3xl">{stats.energyConsumed} kWh</CardTitle>
@@ -83,14 +114,14 @@ const Dashboard = () => {
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-primary/10 to-accent/10">
+          <Card className="bg-gradient-to-br from-primary/10 to-accent/10 hover:shadow-lg transition-all hover:scale-[1.02] cursor-pointer">
             <CardHeader className="pb-3">
               <CardDescription>Surplus Listed</CardDescription>
               <CardTitle className="text-3xl text-primary">{stats.energySaved} kWh/day</CardTitle>
             </CardHeader>
             <CardContent>
               <Link to="/energy">
-                <Button variant="eco" size="sm" className="w-full">
+                <Button variant="eco" size="sm" className="w-full hover:scale-105 transition-transform">
                   Energy Marketplace
                 </Button>
               </Link>
@@ -106,7 +137,7 @@ const Dashboard = () => {
           Your Recycling
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-          <Card className="bg-gradient-to-br from-card to-[hsl(var(--eco-light))]">
+          <Card className="bg-gradient-to-br from-card to-[hsl(var(--eco-light))] hover:shadow-lg transition-all hover:scale-[1.02] cursor-pointer">
             <CardHeader className="pb-3">
               <CardDescription>Total Recycled</CardDescription>
               <CardTitle className="text-3xl">{stats.recyclingAmount} kg</CardTitle>
@@ -119,18 +150,38 @@ const Dashboard = () => {
             </CardContent>
           </Card>
 
-          <Card className="col-span-1 md:col-span-2">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-lg">Waste Market Prices</CardTitle>
-              <CardDescription>Current selling rates</CardDescription>
+          <Card className="col-span-1 md:col-span-2 hover:shadow-lg transition-all">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="flex items-center gap-2 text-lg">
+                    <DollarSign className="h-5 w-5 text-accent" />
+                    Waste Market Prices
+                  </CardTitle>
+                  <CardDescription>Current selling rates</CardDescription>
+                </div>
+                <Select value={wasteCurrency} onValueChange={(val) => setWasteCurrency(val as keyof typeof currencies)}>
+                  <SelectTrigger className="w-24">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Object.keys(currencies).map(curr => (
+                      <SelectItem key={curr} value={curr}>{curr}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                {wasteMarketPrices.map((item) => (
-                  <div key={item.type} className="p-2 bg-muted rounded-lg text-center">
+                {wasteMarketPricesBase.map((item) => (
+                  <div key={item.type} className="p-2 bg-muted rounded-lg text-center hover:shadow-md transition-all hover:scale-105 cursor-pointer">
                     <div className="text-2xl mb-1">{item.icon}</div>
                     <p className="text-xs font-medium mb-1">{item.type}</p>
-                    <p className="text-sm font-bold text-primary">${item.price}/{item.unit}</p>
+                    <p className="text-sm font-bold text-primary">{formatWastePrice(item.price)}/{item.unit}</p>
+                    <p className={`text-xs mt-1 ${item.trend.startsWith('+') ? 'text-[hsl(var(--eco-green))]' : 'text-destructive'}`}>
+                      {item.trend}
+                    </p>
                   </div>
                 ))}
               </div>
@@ -147,18 +198,18 @@ const Dashboard = () => {
             <Trash2 className="h-5 w-5 text-[hsl(var(--waste-orange))]" />
             Your Waste
           </h2>
-          <Card>
+          <Card className="hover:shadow-lg transition-all hover:scale-[1.02]">
             <CardHeader>
               <CardTitle>Waste Disposed</CardTitle>
               <CardDescription>{stats.wasteDisposed} kg this month</CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
-              <div className="flex justify-between items-center p-3 bg-muted rounded-lg">
+              <div className="flex justify-between items-center p-3 bg-muted rounded-lg hover:bg-muted/80 transition-colors">
                 <span className="text-sm font-medium">EcoCredits Earned</span>
                 <span className="text-lg font-bold text-accent">{stats.ecoCredits}</span>
               </div>
               <Link to="/waste">
-                <Button className="w-full" variant="outline">
+                <Button className="w-full hover:scale-105 transition-transform" variant="outline">
                   <Upload className="mr-2 h-4 w-4" />
                   Log Waste Disposal
                 </Button>
@@ -173,22 +224,22 @@ const Dashboard = () => {
             <Coins className="h-5 w-5 text-accent" />
             Token Wallet
           </h2>
-          <Card>
+          <Card className="hover:shadow-lg transition-all hover:scale-[1.02]">
             <CardHeader>
               <CardTitle>Your Balance</CardTitle>
               <CardDescription>Custodially managed tokens</CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
-              <div className="flex justify-between items-center p-3 bg-gradient-to-r from-primary/10 to-accent/10 rounded-lg">
+              <div className="flex justify-between items-center p-3 bg-gradient-to-r from-primary/10 to-accent/10 rounded-lg hover:from-primary/20 hover:to-accent/20 transition-colors">
                 <span className="text-sm font-medium">GreenTokens</span>
                 <span className="text-xl font-bold text-primary">{stats.greenTokens}</span>
               </div>
-              <div className="flex justify-between items-center p-3 bg-muted rounded-lg">
+              <div className="flex justify-between items-center p-3 bg-muted rounded-lg hover:bg-muted/80 transition-colors">
                 <span className="text-sm font-medium">EcoCredits</span>
                 <span className="text-xl font-bold text-accent">{stats.ecoCredits}</span>
               </div>
               <Link to="/wallet">
-                <Button className="w-full" variant="eco">
+                <Button className="w-full hover:scale-105 transition-transform" variant="eco">
                   <Coins className="mr-2 h-4 w-4" />
                   Manage Tokens
                 </Button>
@@ -199,7 +250,7 @@ const Dashboard = () => {
       </div>
 
       {/* Carbon Impact */}
-      <Card className="mb-6 bg-gradient-to-r from-[hsl(var(--eco-green))] to-primary text-primary-foreground">
+      <Card className="mb-6 bg-gradient-to-r from-[hsl(var(--eco-green))] to-primary text-primary-foreground hover:shadow-xl transition-all hover:scale-[1.01]">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <TreePine className="h-6 w-6" />
@@ -226,25 +277,25 @@ const Dashboard = () => {
       {/* Quick Actions */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <Link to="/energy">
-          <Button variant="outline" className="w-full h-20 flex-col gap-2">
+          <Button variant="outline" className="w-full h-20 flex-col gap-2 hover:scale-105 transition-transform hover:border-primary">
             <Zap className="h-5 w-5" />
             Energy
           </Button>
         </Link>
         <Link to="/waste">
-          <Button variant="outline" className="w-full h-20 flex-col gap-2">
+          <Button variant="outline" className="w-full h-20 flex-col gap-2 hover:scale-105 transition-transform hover:border-primary">
             <Trash2 className="h-5 w-5" />
             Waste
           </Button>
         </Link>
         <Link to="/marketplace">
-          <Button variant="outline" className="w-full h-20 flex-col gap-2">
+          <Button variant="outline" className="w-full h-20 flex-col gap-2 hover:scale-105 transition-transform hover:border-primary">
             <Coins className="h-5 w-5" />
             Marketplace
           </Button>
         </Link>
         <Link to="/community">
-          <Button variant="outline" className="w-full h-20 flex-col gap-2">
+          <Button variant="outline" className="w-full h-20 flex-col gap-2 hover:scale-105 transition-transform hover:border-primary">
             <Award className="h-5 w-5" />
             Community
           </Button>
@@ -253,7 +304,7 @@ const Dashboard = () => {
 
       {/* View History */}
       <div className="mt-6">
-        <Button variant="ghost" className="w-full">
+        <Button variant="ghost" className="w-full hover:scale-105 transition-transform">
           <History className="mr-2 h-4 w-4" />
           View Full History
         </Button>

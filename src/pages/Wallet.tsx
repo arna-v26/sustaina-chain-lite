@@ -9,11 +9,13 @@ const Wallet = () => {
     greenTokens: 1250,
     ecoCredits: 340,
     transactions: [
-      { date: "Today", type: "earned", description: "Energy tokenization", amount: 4, token: "GreenTokens" },
-      { date: "Today", description: "Waste disposal", amount: 50, token: "EcoCredits" },
-      { date: "Yesterday", type: "spent", description: "Marketplace purchase", amount: -100, token: "GreenTokens" },
-      { date: "Yesterday", description: "Energy efficiency reward", amount: 30, token: "EcoCredits" },
-      { date: "2 days ago", description: "Energy tokenization", amount: 5, token: "GreenTokens" },
+      { date: "Today", type: "earned", description: "Energy Trade - 15 kWh sold", amount: 45, token: "GreenTokens", source: "Energy Trade" },
+      { date: "Today", type: "earned", description: "Recycling - Plastic & Metal", amount: 50, token: "EcoCredits", source: "Recycling" },
+      { date: "Yesterday", type: "spent", description: "Marketplace purchase", amount: -100, token: "GreenTokens", source: "Marketplace" },
+      { date: "Yesterday", type: "earned", description: "Waste Disposal - 25kg organic", amount: 30, token: "EcoCredits", source: "Waste Disposal" },
+      { date: "2 days ago", type: "earned", description: "Energy Trade - 12 kWh sold", amount: 36, token: "GreenTokens", source: "Energy Trade" },
+      { date: "3 days ago", type: "earned", description: "Recycling - Cardboard & Paper", amount: 25, token: "EcoCredits", source: "Recycling" },
+      { date: "4 days ago", type: "earned", description: "Energy Trade - 8 kWh sold", amount: 24, token: "GreenTokens", source: "Energy Trade" },
     ],
     breakdown: {
       greenTokens: {
@@ -47,21 +49,21 @@ const Wallet = () => {
 
       {/* Balance Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        <Card className="bg-gradient-to-br from-primary to-accent text-primary-foreground">
+        <Card className="bg-gradient-to-br from-primary to-accent text-primary-foreground hover:shadow-xl transition-all hover:scale-[1.02]">
           <CardHeader className="pb-3">
             <CardTitle className="text-lg opacity-90">GreenTokens</CardTitle>
             <CardDescription className="text-primary-foreground/70">
-              Earned from energy surplus
+              Earned from energy trading
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="text-4xl font-bold mb-4">{walletData.greenTokens}</div>
             <div className="flex gap-2">
-              <Button variant="secondary" size="sm" className="flex-1">
+              <Button variant="secondary" size="sm" className="flex-1 hover:scale-105 transition-transform">
                 <ArrowUpRight className="mr-1 h-4 w-4" />
                 Send
               </Button>
-              <Button variant="secondary" size="sm" className="flex-1">
+              <Button variant="secondary" size="sm" className="flex-1 hover:scale-105 transition-transform">
                 <ArrowDownLeft className="mr-1 h-4 w-4" />
                 Receive
               </Button>
@@ -69,20 +71,20 @@ const Wallet = () => {
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-accent/20 to-primary/20">
+        <Card className="bg-gradient-to-br from-accent/20 to-primary/20 hover:shadow-xl transition-all hover:scale-[1.02]">
           <CardHeader className="pb-3">
             <CardTitle className="text-lg">EcoCredits</CardTitle>
-            <CardDescription>Earned from waste disposal</CardDescription>
+            <CardDescription>Earned from recycling & waste disposal</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="text-4xl font-bold mb-4 text-accent">{walletData.ecoCredits}</div>
             <div className="flex gap-2">
-              <Button variant="outline" size="sm" className="flex-1">
+              <Button variant="outline" size="sm" className="flex-1 hover:scale-105 transition-transform">
                 <RefreshCw className="mr-1 h-4 w-4" />
                 Trade
               </Button>
               <Link to="/marketplace" className="flex-1">
-                <Button variant="outline" size="sm" className="w-full">
+                <Button variant="outline" size="sm" className="w-full hover:scale-105 transition-transform">
                   <Coins className="mr-1 h-4 w-4" />
                   Redeem
                 </Button>
@@ -108,10 +110,14 @@ const Wallet = () => {
             <CardContent>
               <div className="space-y-3">
                 {walletData.transactions.map((tx, index) => (
-                  <div key={index} className="flex items-start justify-between p-3 bg-muted rounded-lg">
+                  <div key={index} className="flex items-start justify-between p-3 bg-muted rounded-lg hover:shadow-md transition-all hover:scale-[1.01] cursor-pointer">
                     <div className="flex-1">
                       <p className="font-medium">{tx.description}</p>
-                      <p className="text-xs text-muted-foreground">{tx.date}</p>
+                      <div className="flex items-center gap-2 mt-1">
+                        <p className="text-xs text-muted-foreground">{tx.date}</p>
+                        <span className="text-xs">•</span>
+                        <p className="text-xs text-primary font-medium">{tx.source}</p>
+                      </div>
                     </div>
                     <div className="text-right">
                       <p className={`font-bold ${tx.amount > 0 ? 'text-[hsl(var(--eco-green))]' : 'text-destructive'}`}>
