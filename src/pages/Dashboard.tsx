@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Zap, Trash2, Coins, TreePine, Upload, History, TrendingUp, Award, Recycle, LogOut, Wallet, DollarSign } from "lucide-react";
+import { Zap, Trash2, Coins, TreePine, Upload, History, TrendingUp, Award, Recycle, LogOut, Wallet, DollarSign, BatteryCharging, Battery, Leaf, Target, BarChart3 } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { TokenMonitor } from "@/components/TokenMonitor";
 
@@ -17,7 +17,7 @@ const currencies = {
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const [wasteCurrency, setWasteCurrency] = useState<keyof typeof currencies>("USD");
+  const [wasteCurrency, setWasteCurrency] = useState<keyof typeof currencies>("INR");
   
   const stats = {
     energyGenerated: 145.8,
@@ -85,13 +85,20 @@ const Dashboard = () => {
       {/* Energy Stats */}
       <div className="mb-6">
         <h2 className="text-lg font-semibold mb-3 flex items-center gap-2">
-          <Zap className="h-5 w-5 text-[hsl(var(--energy-yellow))]" />
+          <div className="p-2 rounded-lg bg-[hsl(var(--energy-yellow))]/20">
+            <BatteryCharging className="h-5 w-5 text-[hsl(var(--energy-yellow))]" />
+          </div>
           Your Energy
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Card className="bg-gradient-to-br from-card to-[hsl(var(--eco-light))] hover:shadow-lg transition-all hover:scale-[1.02] cursor-pointer">
+          <Card className="bg-gradient-to-br from-card to-[hsl(var(--eco-light))] hover:shadow-lg transition-all hover:scale-[1.02] cursor-pointer border-l-4 border-l-[hsl(var(--energy-yellow))]">
             <CardHeader className="pb-3">
-              <CardDescription>Generated</CardDescription>
+              <div className="flex items-center justify-between">
+                <CardDescription>Generated</CardDescription>
+                <div className="p-2 rounded-full bg-[hsl(var(--energy-yellow))]/20">
+                  <Zap className="h-4 w-4 text-[hsl(var(--energy-yellow))]" />
+                </div>
+              </div>
               <CardTitle className="text-3xl">{stats.energyGenerated} kWh</CardTitle>
             </CardHeader>
             <CardContent>
@@ -102,9 +109,14 @@ const Dashboard = () => {
             </CardContent>
           </Card>
 
-          <Card className="hover:shadow-lg transition-all hover:scale-[1.02] cursor-pointer">
+          <Card className="hover:shadow-lg transition-all hover:scale-[1.02] cursor-pointer border-l-4 border-l-primary">
             <CardHeader className="pb-3">
-              <CardDescription>Consumed</CardDescription>
+              <div className="flex items-center justify-between">
+                <CardDescription>Consumed</CardDescription>
+                <div className="p-2 rounded-full bg-primary/20">
+                  <Battery className="h-4 w-4 text-primary" />
+                </div>
+              </div>
               <CardTitle className="text-3xl">{stats.energyConsumed} kWh</CardTitle>
             </CardHeader>
             <CardContent>
@@ -114,9 +126,14 @@ const Dashboard = () => {
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-primary/10 to-accent/10 hover:shadow-lg transition-all hover:scale-[1.02] cursor-pointer">
+          <Card className="bg-gradient-to-br from-primary/10 to-accent/10 hover:shadow-lg transition-all hover:scale-[1.02] cursor-pointer border-l-4 border-l-accent">
             <CardHeader className="pb-3">
-              <CardDescription>Surplus Listed</CardDescription>
+              <div className="flex items-center justify-between">
+                <CardDescription>Surplus Listed</CardDescription>
+                <div className="p-2 rounded-full bg-accent/20">
+                  <Target className="h-4 w-4 text-accent" />
+                </div>
+              </div>
               <CardTitle className="text-3xl text-primary">{stats.energySaved} kWh/day</CardTitle>
             </CardHeader>
             <CardContent>
@@ -133,13 +150,20 @@ const Dashboard = () => {
       {/* Recycling Stats */}
       <div className="mb-6">
         <h2 className="text-lg font-semibold mb-3 flex items-center gap-2">
-          <Recycle className="h-5 w-5 text-[hsl(var(--eco-green))]" />
+          <div className="p-2 rounded-lg bg-accent/20">
+            <Recycle className="h-5 w-5 text-accent" />
+          </div>
           Your Recycling
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-          <Card className="bg-gradient-to-br from-card to-[hsl(var(--eco-light))] hover:shadow-lg transition-all hover:scale-[1.02] cursor-pointer">
+          <Card className="bg-gradient-to-br from-card to-[hsl(var(--eco-light))] hover:shadow-lg transition-all hover:scale-[1.02] cursor-pointer border-l-4 border-l-accent">
             <CardHeader className="pb-3">
-              <CardDescription>Total Recycled</CardDescription>
+              <div className="flex items-center justify-between">
+                <CardDescription>Total Recycled</CardDescription>
+                <div className="p-2 rounded-full bg-accent/20">
+                  <Recycle className="h-4 w-4 text-accent" />
+                </div>
+              </div>
               <CardTitle className="text-3xl">{stats.recyclingAmount} kg</CardTitle>
             </CardHeader>
             <CardContent>
@@ -195,7 +219,9 @@ const Dashboard = () => {
         {/* Waste Stats */}
         <div>
           <h2 className="text-lg font-semibold mb-3 flex items-center gap-2">
-            <Trash2 className="h-5 w-5 text-[hsl(var(--waste-orange))]" />
+            <div className="p-2 rounded-lg bg-[hsl(var(--waste-orange))]/20">
+              <Trash2 className="h-5 w-5 text-[hsl(var(--waste-orange))]" />
+            </div>
             Your Waste
           </h2>
           <Card className="hover:shadow-lg transition-all hover:scale-[1.02]">
@@ -221,7 +247,9 @@ const Dashboard = () => {
         {/* Token Wallet */}
         <div>
           <h2 className="text-lg font-semibold mb-3 flex items-center gap-2">
-            <Coins className="h-5 w-5 text-accent" />
+            <div className="p-2 rounded-lg bg-primary/20">
+              <Coins className="h-5 w-5 text-primary" />
+            </div>
             Token Wallet
           </h2>
           <Card className="hover:shadow-lg transition-all hover:scale-[1.02]">
@@ -250,10 +278,12 @@ const Dashboard = () => {
       </div>
 
       {/* Carbon Impact */}
-      <Card className="mb-6 bg-gradient-to-r from-[hsl(var(--eco-green))] to-primary text-primary-foreground hover:shadow-xl transition-all hover:scale-[1.01]">
+      <Card className="mb-6 bg-gradient-to-r from-[hsl(var(--eco-green))]/90 to-primary/90 text-primary-foreground hover:shadow-xl transition-all hover:scale-[1.01] border-2 border-[hsl(var(--eco-green))]">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <TreePine className="h-6 w-6" />
+            <div className="p-2 rounded-lg bg-white/20">
+              <Leaf className="h-6 w-6" />
+            </div>
             Carbon Impact
           </CardTitle>
         </CardHeader>
@@ -277,27 +307,35 @@ const Dashboard = () => {
       {/* Quick Actions */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <Link to="/energy">
-          <Button variant="outline" className="w-full h-20 flex-col gap-2 hover:scale-105 transition-transform hover:border-primary">
-            <Zap className="h-5 w-5" />
-            Energy
+          <Button variant="outline" className="w-full h-24 flex-col gap-2 hover:scale-105 transition-transform hover:border-[hsl(var(--energy-yellow))] hover:bg-[hsl(var(--energy-yellow))]/5 group">
+            <div className="p-2 rounded-full bg-[hsl(var(--energy-yellow))]/20 group-hover:bg-[hsl(var(--energy-yellow))]/30 transition-colors">
+              <BatteryCharging className="h-6 w-6 text-[hsl(var(--energy-yellow))]" />
+            </div>
+            <span className="font-semibold">Energy</span>
           </Button>
         </Link>
         <Link to="/waste">
-          <Button variant="outline" className="w-full h-20 flex-col gap-2 hover:scale-105 transition-transform hover:border-primary">
-            <Trash2 className="h-5 w-5" />
-            Waste
+          <Button variant="outline" className="w-full h-24 flex-col gap-2 hover:scale-105 transition-transform hover:border-[hsl(var(--waste-orange))] hover:bg-[hsl(var(--waste-orange))]/5 group">
+            <div className="p-2 rounded-full bg-[hsl(var(--waste-orange))]/20 group-hover:bg-[hsl(var(--waste-orange))]/30 transition-colors">
+              <Trash2 className="h-6 w-6 text-[hsl(var(--waste-orange))]" />
+            </div>
+            <span className="font-semibold">Waste</span>
           </Button>
         </Link>
         <Link to="/marketplace">
-          <Button variant="outline" className="w-full h-20 flex-col gap-2 hover:scale-105 transition-transform hover:border-primary">
-            <Coins className="h-5 w-5" />
-            Marketplace
+          <Button variant="outline" className="w-full h-24 flex-col gap-2 hover:scale-105 transition-transform hover:border-primary hover:bg-primary/5 group">
+            <div className="p-2 rounded-full bg-primary/20 group-hover:bg-primary/30 transition-colors">
+              <Coins className="h-6 w-6 text-primary" />
+            </div>
+            <span className="font-semibold">Marketplace</span>
           </Button>
         </Link>
         <Link to="/community">
-          <Button variant="outline" className="w-full h-20 flex-col gap-2 hover:scale-105 transition-transform hover:border-primary">
-            <Award className="h-5 w-5" />
-            Community
+          <Button variant="outline" className="w-full h-24 flex-col gap-2 hover:scale-105 transition-transform hover:border-accent hover:bg-accent/5 group">
+            <div className="p-2 rounded-full bg-accent/20 group-hover:bg-accent/30 transition-colors">
+              <Award className="h-6 w-6 text-accent" />
+            </div>
+            <span className="font-semibold">Community</span>
           </Button>
         </Link>
       </div>

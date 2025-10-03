@@ -12,7 +12,7 @@ const currencies = {
 };
 
 export const TokenMonitor = () => {
-  const [currency, setCurrency] = useState<keyof typeof currencies>("USD");
+  const [currency, setCurrency] = useState<keyof typeof currencies>("INR");
   const [greenTokenPrice, setGreenTokenPrice] = useState(2.45);
   const [ecoCreditsPrice, setEcoCreditsPrice] = useState(0.85);
   const [priceChange, setPriceChange] = useState({ green: 0, eco: 0 });
