@@ -217,7 +217,7 @@ const Wallet = () => {
       <Card className="bg-primary/5">
         <CardContent className="pt-6">
           <p className="text-sm text-muted-foreground">
-            ℹ️ Your tokens are managed custodially by SustainaChain. They can only be used within the platform network for trading, redeeming rewards, or donating to community causes.
+            ℹ️ Your tokens are managed custodially by Yourja. They can only be used within the platform network for trading, redeeming rewards, or donating to community causes.
           </p>
         </CardContent>
       </Card>

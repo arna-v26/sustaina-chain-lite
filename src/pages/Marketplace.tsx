@@ -168,7 +168,7 @@ const Marketplace = () => {
       <Card className="bg-primary/5">
         <CardContent className="pt-6">
           <p className="text-sm text-muted-foreground">
-            💱 <strong>Peer-to-peer trading</strong> is available within the SustainaChain network. Trade tokens with other members or list items for exchange. All transactions are managed custodially for your security.
+            💱 <strong>Peer-to-peer trading</strong> is available within the Yourja network. Trade tokens with other members or list items for exchange. All transactions are managed custodially for your security.
           </p>
         </CardContent>
       </Card>

@@ -22,22 +22,25 @@ const Welcome = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-br from-background via-[hsl(var(--eco-light))] to-background">
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-br from-background via-[hsl(var(--eco-light))] to-background relative overflow-hidden">
+      {/* Glow effect */}
+      <div className="absolute inset-0 bg-[image:var(--gradient-glow)] pointer-events-none"></div>
+      
       {/* Logo and Tagline */}
-      <div className="text-center mb-8 space-y-4">
+      <div className="text-center mb-8 space-y-4 relative z-10">
         <div className="inline-flex items-center gap-3 mb-4">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-[var(--shadow-strong)]">
-            <Leaf className="w-10 h-10 text-primary-foreground" />
+          <div className="w-20 h-20 rounded-3xl bg-[image:var(--gradient-eco)] flex items-center justify-center shadow-[var(--shadow-strong)] animate-in zoom-in duration-700">
+            <Leaf className="w-12 h-12 text-primary-foreground" />
           </div>
         </div>
-        <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-          SustainaChain
+        <h1 className="text-5xl md:text-6xl font-bold bg-[image:var(--gradient-eco)] bg-clip-text text-transparent animate-in fade-in slide-in-from-bottom-4 duration-1000">
+          Yourja
         </h1>
-        <p className="text-xl text-muted-foreground">Your Energy. Your Impact.</p>
+        <p className="text-xl md:text-2xl text-muted-foreground animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-150">Your Energy. Your Impact.</p>
       </div>
 
       {/* Login Card */}
-      <Card className="w-full max-w-md">
+      <Card className="w-full max-w-md shadow-[var(--shadow-strong)] border-border/50 backdrop-blur-sm bg-card/95 relative z-10 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl">Welcome</CardTitle>
           <CardDescription>Choose your login method to get started</CardDescription>
@@ -128,7 +131,7 @@ const Welcome = () => {
       </Card>
 
       {/* Footer */}
-      <div className="mt-8 text-center text-sm text-muted-foreground">
+      <div className="mt-8 text-center text-sm text-muted-foreground relative z-10 animate-in fade-in duration-1000 delay-500">
         <p>By continuing, you agree to our Terms & Privacy Policy</p>
       </div>
     </div>
